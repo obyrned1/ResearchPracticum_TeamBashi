@@ -1,0 +1,13 @@
+<h4 > {{ stop.line_ID }} <span> To  {{ stop.stop_headsign }} </span> </h4>
+<ul class="lineInfo">
+    {% for trip in trip_info %}
+    <li data-lat ="{{ trip.stop_id__stop_lat }}" data-lon ="{{trip.stop_id__stop_lon}}") >
+        <span class="dot"><img src = "../static/stars/dot.svg" style="width: 16px; height: 16px;" ></span>
+        <span class = "line"><img src = "../static/stars/line.jpg" style="width: 48px;"></span>
+        <span class = "stationinfo">
+            <span class ="stationID" >{{ trip.stop_id__stop_id }}</span>
+            <span class = "stationName">{{ trip.stop_id__stop_name }}</span>
+        </span>
+    </li>
+    {% endfor %}
+</ul>

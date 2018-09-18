@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bus tracker</title>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/tonystar/bootstrap-float-label/v4.0.0/dist/bootstrap-float-label.min.css"/>
+
+<!-- Bootstrap v3 -->
+<link rel="stylesheet" href="https://cdn.rawgit.com/tonystar/bootstrap-float-label/v3.0.0/dist/bootstrap-float-label.min.css"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono|Quicksand|Raleway|Ubuntu|Fjalla+One" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+    {% load static %}
+    <script src="{% static 'stars/stars.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'stars/style.css' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" >
+    <script>
+
+        $(window).on('resize', function(){
+          var win = $(this); //this = window
+          if (win.width() <= 768) {$(".lineInfo").css("width", "100%");$(".line").hide();}
+          if (win.width() > 768) {
+              $(".line").show();
+              var count = $(".lineInfo").children().length * 60 + 60;
+             $(".lineInfo").css('width', count+"px");}
+        });
+    </script>
+
+</head>
+    <body>
+    <nav class="navbar fixed-top navbar-expand-sm navbar-dark scrolling-navbar" style = "background-color:white;display: none; -webkit-mask-image: linear-gradient(black 90%, transparent 100%);">
+        <a class="navbar-brand" href="/"><img id="image1" src= "{% static 'polls/black-tp.png' %}" /></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMenu">
+            <ul class="navbar-nav ml-auto">
+                <li id="weatherlight">
+            <a class="nav-link" target="_blank" href="https://forecast7.com/en/53d35n6d26/dublin/"><img src="https://w.bookcdn.com/weather/picture/21_18082_1_1_ecf0f1_250_bdc3c7_9da2a6_ffffff_1_2071c9_ffffff_0_6.png?scode=124&domid=w209&anc_id=41940"  alt="booked.net"/></a>
+            </li>
+            <li class="nav-item active">
+                    <a class="nav-link" href="/" style="color: black">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item" >
+                    <a class="nav-link" href="/stars" style="color: black">Bus Tracker</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.dublinbus.ie/" style="color: black">Dublin Bus</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--<img src="../static/stars/loading.gif" class="loading_image">-->
+    <table id="wrapper">
+      <tr>
+        <td><img src="../static/stars/loading.gif"  class = "loading_image" alt="" ></td>
+      </tr>
+    </table>
+    <div id="map" style="display:none;"></div>
+    <div class = "text-white bg-dark" id="detailed_info"></div>
+    </body>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRUrdJ4Tz9rLrHrOkwJWpA9QSYNJbWQ0Q&libraries=places&callback=initMap" defer>    //Map API Key
+</script>
+</html>

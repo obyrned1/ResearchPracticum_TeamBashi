@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bashi 巴士</title>
+    <meta charset="UTF-8">
+    <!--bootstrap-->
+        <!-- Bootstrap v4 -->
+<link rel="stylesheet" href="https://cdn.rawgit.com/tonystar/bootstrap-float-label/v4.0.0/dist/bootstrap-float-label.min.css"/>
+
+<!-- Bootstrap v3 -->
+<link rel="stylesheet" href="https://cdn.rawgit.com/tonystar/bootstrap-float-label/v3.0.0/dist/bootstrap-float-label.min.css"/>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono|Quicksand|Raleway|Ubuntu|Fjalla+One" rel="stylesheet">
+    <script>
+        var stop_data = {{ stop_data | safe }};
+        var autoCompleteDict = [];
+        for(i = 0; i<stop_data.length; i++){
+            autoCompleteDict.push({ value:{lat:parseFloat(stop_data[i]["stop_lat"]), lng:parseFloat(stop_data[i]["stop_lon"])}, key: stop_data[i]["stop_id"] + "  " + stop_data[i]["stop_name"]});
+        }
+        var autoCompleteOptions  = autoCompleteDict.map(a => a.key);
+    </script>
+    {% load static %}
+    <script src="{% static 'polls/jquery.datetimepicker.full.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'polls/jquery.datetimepicker.css' %}" >
+    <script src="{% static 'polls/bashi.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" >
+
+</head>
+
+<body>
+    
+<!----- NAVBAR ----> 
+
+<nav class="navbar fixed-top navbar-expand-sm navbar-dark scrolling-navbar" style = "background-color:black; -webkit-mask-image: linear-gradient(black 90%, transparent 100%);">
+    <a class="navbar-brand" href="/"><img id="image1" src="/static/polls/white-tp.png" /></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+   
+    <div class="collapse navbar-collapse" id="navbarMenu">
+        <ul class="navbar-nav ml-auto">
+            <li id="weatherlight" style="display:none;">
+		<a class="nav-link" target="_blank" href="https://forecast7.com/en/53d35n6d26/dublin/"><img src="https://w.bookcdn.com/weather/picture/21_18082_1_1_ecf0f1_250_bdc3c7_9da2a6_ffffff_1_2071c9_ffffff_0_6.png?scode=124&domid=w209&anc_id=41940"  alt="booked.net"/></a>
+	    </li>
+	     <li id="weatherdark">
+		<a class="nav-link" target="_blank" href="https://forecast7.com/en/53d35n6d26/dublin/"><img src="https://w.bookcdn.com/weather/picture/21_18082_1_1_34495e_250_2c3e50_ffffff_ffffff_1_2071c9_ffffff_0_6.png?scode=124&domid=w209&anc_id=31357"  alt="booked.net"/></a>
+	    </li>
+	    <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/stars">Bus Tracker</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://www.dublinbus.ie/">Dublin Bus</a>
+            </li>
+        </ul>
+    </div>
+</nav>    
+    
+<!-----Container---------->
+    <div class ="container-fluid h-100" id="bg">
+        <div class="image-overlay">
+        </div>
+    </div>
+    
+	<div class="container-fluid fixed-navbar" style="height:5%; display: none;margin: 0px;padding: 0px;"></div>
+
+
+    <!--Non-Gradient map: -->    
+    <div class="container-fluid scene_element scene_element--fadeinright" id="map" style="position: relative;overflow: hidden;display:none; height:67%;"></div>
+	
+    
+    {% csrf_token %}
+
+    <!--The auto complete search bar-->
+    <div class="container-fluid h-100" id="first_searchbar" style = "position: absolute; top: 0%;z-index: 10;">
+        <div class="row h-100 justify-content-center align-items-center">
+            <form autocomplete = "off" id="search"  style="opacity: 0.9;" class="pt-3 pb-3 col-sm-7 my-auto bg-transparent">
+                <p class="m-b-1 text-white" id="icon" style="padding-top:0.7em;text-align: left; font-family: 'Quicksand', sans-serif; font-size:50px;">Plan your Dublin Bus journey with <Strong class="text-warning" style="color:#04b5ff !important;">Bashi</Strong>.</p>
+                <div class="pt-3 form-row">
+                    <div class="col-sm-4 autocomplete">
+                        <div class="form-group has-float-label">
+                        <input class="form-control" id = "departure_input" type ="text" name ="departure_input"
+                        text="Start"
+                        placeholder="Choose Departure" data-place = "" 
+                        autocomplete = "off">
+                        <label for="departure_input" style="font-size: 15px; line-height: 2 "><strong>Start</strong></label>
+                        </div>
+                    </div>
+                    <div class = "col-sm-1 text-center" >
+                        <i class="fas fa-exchange-alt" id = "exchange" style="line-height:38px; font-size: 24px"></i>
+                    </div>
+                    
+                    <div class="col-sm-4 autocomplete" >
+                        <div class="form-group has-float-label"> 
+                        <input class="form-control" id = "destination_input" type ="text" name ="destination_input" placeholder="Choose destination stop number or name" data-place = "" autocomplete = "off">
+                        <label for="destination_input" style="font-size: 15px; line-height: 2"><strong>End</strong></label>
+                        </div>
+                    </div>                           
+                </div>
+                <div class="form-row mt-2">
+                    <div class = "col-sm-2.5 text-white text-left" style = "font-size: 30px; font-family: 'Quicksand', sans-serif;font-weight: 600;">Depart</div>
+                        <div class= "pl-1 col-ml-3 text-warning" id="change_time" style = "font-size: 30px">
+                            <span style="border-bottom:3px solid;color:#04b5ff;font-weight:700;font-family: 'Quicksand', sans-serif;">Now</span>
+                            <div id ="time_input", class="form-group has-float-label">
+                                <input class="form-control" id="timeDate" type="timeDate" placeholder="Now"/>
+                                <label for="timeDate" style="font-size: 15px; line-height: 2"><strong>When</strong></label>
+                             </div>
+                        </div>
+                    <div class = "col-sm-2">
+                        <input class="form-control" value ="GO" type = "submit" style="background-color:#ffc107;cursor: pointer; border-radius: 15px;">
+                    </div>
+                </div>
+            </form>
+    </div>
+    </div>
+
+    <!--- Second Autocomplete Searchbar --->
+    <div class = "container-fluid" id="detailed_info" style="height:28%;">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div id= "second_searchbar"  class="col-sm-3 h-100" style="background-color: #005073;">
+                 <div class="row h-100 justify-content-center align-items-center">
+                    <form autocomplete = "off" id="search_2"  style="opacity: 0.9;" class="col-sm-12 my-auto bg-transparent pt-3 text-warning" >
+                        <div class="form-row">
+                            <div class="col-sm-10 autocomplete">
+                                <div class="form-group has-float-label">
+                                <input class="form-control" id = "departure_input_2" style = "line-height: 2" type ="text" name ="departure_input"
+                                text="Start"
+                                placeholder="Choose Departure" data-place = ""
+                                autocomplete = "off">
+                                <label for="departure_input" style="font-size: 15px; line-height: 2 "><strong>Start</strong></label>
+                                </div>
+                            </div>
+                            <div class = "col-sm-2 text-center" >
+                                <i class="fas fa-exchange-alt" id = "exchange_2" style="line-height:38px; font-size: 24px"></i>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-sm-10 autocomplete" >
+                                <div class="form-group has-float-label">
+                                <input class="form-control" id = "destination_input_2" style = "line-height: 2" type ="text" name ="destination_input" placeholder="Choose destination stop number or name" data-place = "" autocomplete = "off">
+                                <label for="destination_input" style="font-size: 15px; line-height: 2"><strong>End</strong></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row mt-2">
+                            <div class= "col-sm-6 " id="change_time" style = "font-size: 30px">
+                                <div id ="time_input", class="form-group has-float-label">
+                                    <input class="form-control" id="timeDate_2" type="timeDate" placeholder="Now"/>
+                                    <label for="timeDate" style="font-size: 15px; line-height: 2"><strong>When</strong></label>
+                                 </div>
+                            </div>
+                            <div class = "col-sm-6">
+                                <input class="form-control" value ="GO" type = "submit" style="cursor: pointer; border-radius: 15px;font-family: 'Quicksand', sans-serif;font-weight: 600;">
+                            </div>
+                        </div>
+                    </form>
+                 </div>
+            </div>
+            <div class="h-100 col-sm-9 " align = "right" style="font-family: 'Roboto Mono', monospace;">
+                <div id = "routesTest" class="row h-100" style="background-color: #005073;font-family: 'Quicksand', sans-serif;font-weight:600;"></div>
+            </div>
+        </div>
+    </div>
+
+<!--- Google Map API --->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRUrdJ4Tz9rLrHrOkwJWpA9QSYNJbWQ0Q&libraries=places&callback=initMap" defer>    //Map API Key
+</script>
+
+<!--- Autocomplete Searchbar Script --->
+<script>
+    autocomplete(document.getElementById("departure_input"), autoCompleteOptions);
+    autocomplete(document.getElementById("destination_input"), autoCompleteOptions);
+    jQuery('#timeDate').datetimepicker(
+{
+      allowTimes:['00:00', '00:30', '01:00', '01:30', '02:00', '02:30', '03:00', '03:30', '04:00', '04:30', '05:00', '05:30', '06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30',
+                  '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30',
+                  '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30'
+ ],
+      minDate:'-1970/01/01',//yesterday is minimum date(for today use 0 or -1970/01/01)
+      maxDate:'+1970/01/05'
+    }
+);
+
+
+</script>
+
+</body>
+</html>

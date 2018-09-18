@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <title>Bus Tracker</title>
+    <style>
+        #map{
+            height: 100%
+        }
+        html, body{
+            height:100%;
+            margin:0;
+            padding:0;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+    <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>-->
+    <!--<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>-->
+
+    <!--<script src="cdnjs.cloudflare.com/ajax/libs/gsap/1.18.3/TweenMax.min.js"></script>-->
+    <!--<script src ="s3-us-west-2.amazonaws.com/s.cdpn.io/16327/MorphSVGPlugin.min.js"><</script>-->
+
+    <!--<script>-->
+        <!--$(".se-pre-con").hide(); // hide the loader-->
+    <!--</script>-->
+        {% load static %}
+    <script src="{% static 'stars/stars.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'stars/style.css' %}" >
+
+
+</head>
+<body>
+    <!-- <nav class="navbar fixed-top navbar-expand-sm text-light scrolling-navbar" style = "background-color:black;height:55px;-webkit-mask-image: linear-gradient(black 90%, transparent 100%);"> -->
+    <nav class="navbar fixed-top navbar-expand-sm navbar-dark scrolling-navbar" style = "background-color:black; -webkit-mask-image: linear-gradient(black 90%, transparent 100%);">
+        <a class="navbar-brand" href="/">Bashi 巴士</a>
+        <div id="tp-weather-widget"></div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarMenu">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/stars">Bus stars</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.dublinbus.ie/">Dublin Bus</a>
+                </li>
+                <li class="nav-item">
+                      <a class="nav-link" href="/admin">Log in</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--------------->
+    <div id="map"></div>
+    <div class = "container-fluid" id="detailed_info" style="height:28%;">
+    </div>
+
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRUrdJ4Tz9rLrHrOkwJWpA9QSYNJbWQ0Q&libraries=places,drawing&callback=initMap" defer>    //Map API Key
+</script>
+</body>
+</html>
